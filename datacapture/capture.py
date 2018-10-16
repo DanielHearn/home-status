@@ -9,10 +9,11 @@ apikey = secret.get_key()
 waitInterval = 1800
 
 def startInterval():
+    print(apikey)
     secondsIn30Min = 30*60
     timeUntilStart = secondsIn30Min - time.time() % (secondsIn30Min)
     print('Sending first data in: {0:0.1f} minutes'.format(timeUntilStart/60))
-    time.sleep(timeUntilStart)
+    #time.sleep(timeUntilStart)
     updateInterval()
 
 def updateInterval():
@@ -35,9 +36,9 @@ def printStatus(status):
 def postTemp(status):
     qs = {
         'method': 'set',
+        'key': apikey,
         'temp_value': status['temp'],
-        'humidity_value': status['humidity'],
-        'key': apikey
+        'humidity_value': status['humidity']
     }
     r = requests.post('http://thekoreanhandbook.com/homestatus', params=qs)
     print(r.text)

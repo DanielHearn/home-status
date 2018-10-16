@@ -8,11 +8,24 @@
 </head>
 
 <body>
-    <h1 id="temp"><span id="value--temp"> </span><span id="degree">c</span></h1>
-    <h1 id="humidity"><span id="value--humidity"> </span><span>%</span></h1>
-    <h2 id="date"><span id="value--date"></span></h2>
+    <h1 id="temp">
+        <span>Temperature: </span>
+        <span id="value--temp"></span>
+        <span id="degree">c</span>
+    </h1>
+    <h1 id="humidity">
+        <span>Humidity: </span>
+        <span id="value--humidity"></span>
+        <span>%</span>
+    </h1>
+    <h2 id="date">
+        <span id="value--date"></span>
+    </h2>
     <h3 id="title">Home Status</h3>
-    <script  src="js/index.js"></script>
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js">
+    </script>
+    <script src="js/index.js"></script>
 </body>
 
 </html>
