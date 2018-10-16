@@ -3,7 +3,19 @@ const humidityValueElement = document.querySelector('#value--humidity')
 const dateElement = document.querySelector('#value--date')
 const apiUrlRoot = 'http://www.thekoreanhandbook.com/homestatus'
 
-let statusQuantity = 1
+let statusQuantity = 10
+
+function mapTemps (statuses) {
+  return statuses.map((status) => { return status.temp_value })
+}
+
+function mapHumidities (statuses) {
+  return statuses.map((status) => { return status.humidity_value })
+}
+
+function mapDates (statuses) {
+  return statuses.map((status) => { return status.date_inserted })
+}
 
 function getStatus () {
   var apiUrl = apiUrlRoot + '?status_quantity=' + statusQuantity
@@ -14,9 +26,16 @@ function getStatus () {
       console.log(json)
       if (json.status == 'success') {
         const status = json.statuses[0]
+        const statusList = json.statuses.reverse()
         tempValueElement.textContent = status.temp_value
         humidityValueElement.textContent = status.humidity_value
         dateElement.textContent = status.date_inserted
+
+        const mappedTemps = mapTemps(statusList)
+        const mappedHumidity = mapHumidities(statusList)
+        const mappedDates = mapDates(statusList)
+
+        showChart(mappedTemps, mappedHumidity, mappedDates)
         return true
       } else {
         return false
@@ -28,40 +47,38 @@ function getStatus () {
 
 getStatus()
 
-const ctx = document.getElementById('myChart').getContext('2d')
-const myChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-    datasets: [{
-      label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)'
-      ],
-      borderColor: [
-        'rgba(255,99,132,1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-      ],
-      borderWidth: 1
-    }]
-  },
-  options: {
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true
-        }
+function showChart (temp, humidity, dates) {
+  const ctx = document.getElementById('statusChart').getContext('2d')
+  const statusChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Temp c',
+        data: temp,
+        backgroundColor: 'transparent',
+        borderColor: 'red',
+        borderWidth: 1
+      }, {
+        label: 'Humidity %',
+        data: humidity,
+        backgroundColor: 'transparent',
+        borderColor: 'blue',
+        borderWidth: 1
       }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true,
+            steps: 10,
+            stepValue: 5,
+            max: 100
+          }
+        }]
+      }
     }
-  }
-})
+  })
+}

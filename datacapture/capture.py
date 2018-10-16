@@ -13,7 +13,7 @@ def startInterval():
     secondsIn30Min = 30*60
     timeUntilStart = secondsIn30Min - time.time() % (secondsIn30Min)
     print('Sending first data in: {0:0.1f} minutes'.format(timeUntilStart/60))
-    #time.sleep(timeUntilStart)
+    time.sleep(timeUntilStart)
     updateInterval()
 
 def updateInterval():
@@ -37,10 +37,12 @@ def postTemp(status):
     qs = {
         'method': 'set',
         'key': apikey,
-        'temp_value': status['temp'],
-        'humidity_value': status['humidity']
+        'temp_value': int(status['temp']),
+        'humidity_value': int(status['humidity'])
     }
+    print(qs)
     r = requests.post('http://thekoreanhandbook.com/homestatus', params=qs)
+    print(r.url)
     print(r.text)
 
 startInterval()
