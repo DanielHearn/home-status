@@ -3,29 +3,30 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>A Pen by  Daniel Hearn</title>
-  
-  
-  
-      <link rel="stylesheet" href="css/style.css">
-
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home Status</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-
-  
-<h1 id="temp"><span id="value--temp"> </span><span id="degree">c</span></h1>
-<h2 id="date"><span id="value--date"></span></h2>
-<h3 id="title">Home Status</h3>
-  
-  
-
-    <script  src="js/index.js"></script>
-
-
-
-
+    <h1 id="temp">
+        <span>Temperature: </span>
+        <span id="value--temp"></span>
+        <span id="degree">c</span>
+    </h1>
+    <h1 id="humidity">
+        <span>Humidity: </span>
+        <span id="value--humidity"></span>
+        <span>%</span>
+    </h1>
+    <h2 id="date">
+        <span id="value--date"></span>
+    </h2>
+    <h3 id="title">Home Status</h3>
+    <canvas id="statusChart" width="400" height="400"></canvas>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js">
+    </script>
+    <script src="js/index.js"></script>
 </body>
 
 </html>
