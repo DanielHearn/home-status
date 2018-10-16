@@ -11,8 +11,8 @@ waitInterval = 1800
 def startInterval():
     secondsIn30Min = 30*60
     timeUntilStart = secondsIn30Min - time.time() % (secondsIn30Min)
-    time.sleep(timeUntilStart)
     print('Sending first data in: {0:0.1f} minutes'.format(timeUntilStart/60))
+    time.sleep(timeUntilStart)
     updateInterval()
 
 def updateInterval():
