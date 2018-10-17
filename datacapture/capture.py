@@ -6,13 +6,15 @@ import requests
 import secret
 
 apikey = secret.get_key()
-waitInterval = 1800
 
-def startInterval():
-    print(apikey)
+def calculateInterval():
     secondsIn30Min = 30*60
     timeUntilStart = secondsIn30Min - time.time() % (secondsIn30Min)
-    print('Sending first data in: {0:0.1f} minutes'.format(timeUntilStart/60))
+    return timeUntilStart/60
+
+def startInterval():
+    timeUntilStart = calculateInterval()
+    print('Sending first data in: {0:0.1f} minutes'.format(timeUntilStart))
     time.sleep(timeUntilStart)
     updateInterval()
 
@@ -24,6 +26,8 @@ def updateInterval():
         status['humidity'] = temp_humidity[1]
         printStatus(status)
         postTemp(status)
+        timeUntilStart = calculateInterval()
+        print('Sending next data in: {0:0.1f} minutes'.format(timeUntilStart))
         time.sleep(waitInterval)
 
 def getTemp():
@@ -40,9 +44,11 @@ def postTemp(status):
         'temp_value': int(status['temp']),
         'humidity_value': int(status['humidity'])
     }
-    print(qs)
-    r = requests.post('http://thekoreanhandbook.com/homestatus', params=qs)
-    print(r.url)
-    print(r.text)
+    try:
+        r = requests.post('http://thekoreanhandbook.com/homestatus', params=qs)
+        print(r.text)
+    except:
+        print('Fail request')
+        pass
 
 startInterval()

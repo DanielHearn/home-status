@@ -1,0 +1,22 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title Home Status
+    link(rel='stylesheet', href='css/style.css')
+  body
+    h1#temp
+      span Temperature: 
+      span#value--temp
+      span#degree c
+    h1#humidity
+      span Humidity: 
+      span#value--humidity
+      span %
+    h2#date
+      span#value--date
+    h3#title Home Status
+    canvas#statusChart(width='400', height='400')
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js')
+    script(src='js/index.js')
