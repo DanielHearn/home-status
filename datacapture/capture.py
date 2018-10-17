@@ -28,7 +28,7 @@ def updateInterval():
         postTemp(status)
         timeUntilStart = calculateInterval()
         print('Sending next data in: {0:0.1f} minutes'.format(timeUntilStart))
-        time.sleep(waitInterval)
+        time.sleep(timeUntilStart)
 
 def getTemp():
     humidity, temperature = Adafruit_DHT.read_retry(11, 4)
