@@ -1,0 +1,46 @@
+{
+  "name": "home-status",
+  "version": "1.0.0",
+  "description": "Home status viewer.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielHearn/home-status.git"
+  },
+  "author": "Daniel Hearn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanielHearn/home-status/issues"
+  },
+  "homepage": "https://github.com/DanielHearn/home-status#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "browser-sync": "^2.24.6",
+    "del": "^3.0.0",
+    "gh-pages": "^1.2.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-cache": "^0.4.6",
+    "gulp-if": "^2.0.2",
+    "gulp-imagemin": "^3.4.0",
+    "gulp-uglify": "^3.0.1",
+    "gulp-uncss": "^1.0.6",
+    "gulp-useref": "^3.1.5",
+    "run-sequence": "^2.2.1"
+  },
+  "dependencies": {
+    "base64url": "^2.0.0",
+    "boom": "^7.2.0",
+    "date-fns": "^1.29.0",
+    "gulp-cssnano": "^2.1.3",
+    "gulp-pug": "^4.0.1",
+    "gulp-sass": "^4.0.1",
+    "hoek": "^5.0.3",
+    "screenfull": "^3.3.2"
+  }
+}

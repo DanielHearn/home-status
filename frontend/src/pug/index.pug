@@ -1,0 +1,34 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title Home Status
+    link(rel='stylesheet', href='css/main.css')
+  body
+    #main
+      div.header
+        h1 Home Status
+      div.grid-container
+        section#grid
+          div.grid-item
+            div.grid-content
+              p.content-title Latest Status
+              p#latest-temp
+                span Temperature: 
+                span.value
+                span.degree c
+              p#latest-humidity
+                span Humidity: 
+                span.value
+                span %
+              p#latest-date
+                span.value
+          div.grid-item
+            div.grid-content
+              p.content-title Home Status
+              div.chart-container
+                canvas#statusChart(width='400', height='400')
+    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js')
+    script(src='js/moment.js')
+    script(src='js/index.js')

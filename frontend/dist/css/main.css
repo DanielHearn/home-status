@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700,800");
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: #efefef;
+  display: flex;
+  margin: 0;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #444; }
+
+h1 {
+  font-size: 1.9em;
+  font-weight: 600; }
+
+h1 #degree {
+  font-size: 0.75em; }
+
+h2 {
+  font-size: 1.75em;
+  font-weight: 500; }
+
+h3 {
+  font-size: 1.5em;
+  font-weight: 400; }
+
+h4 {
+  font-size: 1.25em;
+  font-weight: 400; }
+
+p {
+  font-size: 1em;
+  font-weight: 400; }

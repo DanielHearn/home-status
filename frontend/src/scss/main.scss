@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700,800");
+
+$off-white: #efefef;
+$white: #fefefe;
+$dark: #222;
+
+$content-spacing: 1em;
+
+$title-size: 1.6em;
+$title-weight: 600;
+$heading-size: 1.5em;
+$heading-weight: 500;
+$subheading-size: 1.25em;
+$subheading-weight: 400;
+$p-size: 1em;
+$p-weight: 400;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: #efefef;
+  display: flex;
+  margin: 0;
+  min-height: 100vh;
+  width: 100vw;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: #444;
+}
+
+h1 {
+  font-size: $title-size;
+  font-weight: $title-weight;
+  color: $dark;
+  margin: 0.25em 0;
+}
+
+p {
+  font-size: $p-size;
+  font-weight: $p-weight;
+  color: $dark;
+}
+
+#main {
+  display: flex;
+  flex: 1 auto;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: $content-spacing;
+}
+
+.header {
+  display: flex;
+  padding: $content-spacing;
+  background: $white;
+  margin-bottom: $content-spacing;
+}
+
+.grid-container {
+  display: flex;
+  flex: 1 auto;
+}
+
+#grid {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  row-gap: $content-spacing;
+  column-gap: $content-spacing;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: 1fr;
+  .grid-item {
+    display: flex;
+    flex-direction: column;
+    background: $white;
+    .grid-content {
+      display: flex;
+      flex: 1 auto;
+      flex-direction: column;
+      padding: $content-spacing;
+    }
+  }
+}
+
+.chart-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-title {
+  font-size: $heading-size;
+  font-weight: $heading-weight;
+  margin: 0.25em 0;
+}
+
+@media screen and (max-width: 50em) {
+  html body {
+    #grid {
+      grid-template-columns: 100%;
+    }
+  }
+}
