@@ -46,9 +46,9 @@ gulp.task('js', function () {
     'node_modules/babel-polyfill/dist/polyfill.js',
     'dist/js/*.js'
   ])
-    .pipe(babel({
-      presets: ['env']
-    }))
+    // .pipe(babel({
+    //  presets: ['env']
+    // }))
     .pipe(gulp.dest('dist/js'))
 })
 
