@@ -10,11 +10,11 @@ apikey = secret.get_key()
 def calculateInterval():
     secondsIn30Min = 30*60
     timeUntilStart = secondsIn30Min - time.time() % (secondsIn30Min)
-    return timeUntilStart/60
+    return timeUntilStart
 
 def startInterval():
     timeUntilStart = calculateInterval()
-    print('Sending first data in: {0:0.1f} minutes'.format(timeUntilStart))
+    printNextSend(timeUntilStart)
     time.sleep(timeUntilStart)
     updateInterval()
 
@@ -27,7 +27,7 @@ def updateInterval():
         printStatus(status)
         postTemp(status)
         timeUntilStart = calculateInterval()
-        print('Sending next data in: {0:0.1f} minutes'.format(timeUntilStart))
+        printNextSend(timeUntilStart)
         time.sleep(timeUntilStart)
 
 def getTemp():
@@ -36,6 +36,9 @@ def getTemp():
 
 def printStatus(status):
     print('Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(status['temp'], status['humidity']))
+
+def printNextSend(timeUntilStart):
+    print('Sending next data in: {0:0.1f} minutes'.format(timeUntilStart/60))
 
 def postTemp(status):
     qs = {
@@ -51,4 +54,7 @@ def postTemp(status):
         print('Fail request')
         pass
 
-startInterval()
+if(len(apikey)):
+    startInterval()
+else:
+    print('Api key required in secrets file to capture data')
