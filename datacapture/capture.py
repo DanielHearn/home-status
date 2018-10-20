@@ -2,6 +2,7 @@
 import sys
 import Adafruit_DHT
 import time
+import datetime
 import requests
 import secret
 
@@ -41,11 +42,14 @@ def printNextSend(timeUntilStart):
     print('Sending next data in: {0:0.1f} minutes'.format(timeUntilStart/60))
 
 def postTemp(status):
+    date = datetime.datetime.now().isoformat()
+
     qs = {
         'method': 'set',
         'key': apikey,
         'temp_value': int(status['temp']),
-        'humidity_value': int(status['humidity'])
+        'humidity_value': int(status['humidity']),
+        'date': date
     }
     try:
         r = requests.post('http://thekoreanhandbook.com/homestatus', params=qs)
