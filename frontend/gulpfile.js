@@ -46,9 +46,16 @@ gulp.task('js', function () {
     'node_modules/babel-polyfill/dist/polyfill.js',
     'dist/js/*.js'
   ])
-    // .pipe(babel({
-    //  presets: ['env']
-    // }))
+    .pipe(gulp.dest('dist/js'))
+})
+
+gulp.task('babel', function () {
+  return gulp.src([
+    'dist/js/index.js'
+  ])
+    .pipe(babel({
+      presets: ['env']
+    }))
     .pipe(gulp.dest('dist/js'))
 })
 
@@ -83,7 +90,7 @@ gulp.task('watch', ['browserSync', 'sass'], function () {
 
 gulp.task('build', function (callback) {
   runSequence('clean:dist',
-    ['pug', 'sass', 'images', 'favicons'], 'useref', 'js',
+    ['pug', 'sass', 'images', 'favicons'], 'useref', 'js', 'babel',
     callback
   )
 })
