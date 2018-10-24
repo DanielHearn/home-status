@@ -1,5 +1,5 @@
 # home-status
-Frontend and data scraping for my home status checker on https://www.danielhearn.co.uk/home-status
+Frontend and data scraping for my home status checker on www.danielhearn.co.uk/home-status
 
 ## Frontend
 
