@@ -1,14 +1,14 @@
 # home-status
-Frontend and data scraping for my home status checker
-
+Frontend and data scraping for my home status checker on https://www.danielhearn.co.uk/home-status
 
 ## Frontend
 
-Page showing the last status recorded within the database.
+Page showing the last status and graph showing changes in statuses over time.
 
 ## Data Capture
 
 Python script used to capture the status from the raspberry pi.
+Currently capturing: temperature, humidity, and the date when these values were captured.
 
 ## Backend
 
