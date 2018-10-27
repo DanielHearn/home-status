@@ -11,9 +11,9 @@ const apiUrlRoot = 'http://www.thekoreanhandbook.com/homestatus'
 
 const colors = {
   red: '#ff7491',
-  lightRed: '#ff8ca4',
-  blue: '#37a2eb'
-
+  lightRed: 'rgba(255,116,145,0.5)',
+  blue: '#37a2eb',
+  lightBlue: 'rgba(55,162,235, 0.5)'
 }
 
 const timePeriods = {
@@ -22,25 +22,69 @@ const timePeriods = {
   days_7: 336
 }
 
-let statusQuantity = 336
+const options = {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Temp c',
+      backgroundColor: colors.lightRed,
+      borderColor: colors.red,
+      borderWidth: 1
+    }, {
+      label: 'Humidity %',
+      backgroundColor: colors.lightBlue,
+      borderColor: colors.blue,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+          // steps: 10,
+          // stepValue: 5,
+          max: 100
+        }
+      }]
+    }
+  }
+}
+
+let statusQuantity = timePeriods.days_7
+let statusChart
+let status
+let currentPeriod = timePeriods.days_1
 
 day1Button.addEventListener('click', get1DayStatus)
 day2Button.addEventListener('click', get2DayStatus)
 day7Button.addEventListener('click', get7DayStatus)
 
+function showChartButtonActive (activeButton) {
+  day1Button.classList.remove('active')
+  day2Button.classList.remove('active')
+  day7Button.classList.remove('active')
+  activeButton.classList.add('active')
+}
+
 function get1DayStatus () {
-  statusQuantity = timePeriods.days_1
-  handleStatus()
+  currentPeriod = timePeriods.days_1
+  showChartButtonActive(day1Button)
+  getChartData(currentPeriod)
 }
 
 function get2DayStatus () {
-  statusQuantity = timePeriods.days_2
-  handleStatus()
+  currentPeriod = timePeriods.days_2
+  showChartButtonActive(day2Button)
+  getChartData(currentPeriod)
 }
 
 function get7DayStatus () {
-  statusQuantity = timePeriods.days_7
-  handleStatus()
+  currentPeriod = timePeriods.days_7
+  showChartButtonActive(day7Button)
+  getChartData(currentPeriod)
 }
 
 function mapTemps (statuses) {
@@ -83,17 +127,20 @@ function handleStatus () {
   getStatus()
     .then((json) => {
       if (json) {
+        status = json
         showStatus(json)
       }
     })
 }
 
-function showStatus (json) {
-  showLatestStatus(json.statuses[0])
-  getChartData(json)
+function showStatus () {
+  showLatestStatus()
+  createChart()
+  getChartData(currentPeriod)
 }
 
-function showLatestStatus (latestStatus) {
+function showLatestStatus () {
+  const latestStatus = status.statuses[0]
   const temp = latestStatus.temp_value
   const humidity = latestStatus.humidity_value
   const date = moment.parseZone(latestStatus.date_inserted)
@@ -115,76 +162,43 @@ function reduceArray (array, increment) {
   return newArray
 }
 
-function getChartData (json) {
-  const statusList = json.statuses.reverse()
+function getChartData (length) {
+  // Get n number of statuses
+  const statusList = status.statuses.slice(0, length).reverse()
+
   let mappedTemps = mapTemps(statusList)
   let mappedHumidity = mapHumidities(statusList)
   let mappedDates = mapDates(statusList)
 
   // Skip n amount of items in array to reduce chart clutter
-  if (statusQuantity === timePeriods.days_2) {
+  if (currentPeriod === timePeriods.days_2) {
     mappedTemps = reduceArray(mappedTemps, 2)
     mappedHumidity = reduceArray(mappedHumidity, 2)
     mappedDates = reduceArray(mappedDates, 2)
-  } else if (statusQuantity === timePeriods.days_7) {
-    mappedTemps = reduceArray(mappedTemps, 8)
-    mappedHumidity = reduceArray(mappedHumidity, 8)
-    mappedDates = reduceArray(mappedDates, 8)
+  } else if (currentPeriod === timePeriods.days_7) {
+    mappedTemps = reduceArray(mappedTemps, 6)
+    mappedHumidity = reduceArray(mappedHumidity, 6)
+    mappedDates = reduceArray(mappedDates, 6)
   }
 
-  showChart(mappedTemps, mappedHumidity, mappedDates)
+  updateChart(mappedTemps, mappedHumidity, mappedDates)
 }
 
-function deleteChart () {
-  if (document.querySelector('#statusChart')) {
-    document.querySelector('.chart-container').innerHTML = ''
-  }
-}
-
-function showChart (temp, humidity, dates) {
-  deleteChart()
-
+function createChart () {
   const canvas = document.createElement('canvas')
   canvas.width = 400
   canvas.height = 400
   canvas.id = 'statusChart'
   chartContainer.appendChild(canvas)
-
   const ctx = document.querySelector('#statusChart').getContext('2d')
-  const options = {
-    type: 'line',
-    data: {
-      labels: dates,
-      datasets: [{
-        label: 'Temp c',
-        data: temp,
-        backgroundColor: colors.lightRed,
-        borderColor: colors.red,
-        borderWidth: 1
-      }, {
-        label: 'Humidity %',
-        data: humidity,
-        backgroundColor: colors.blue,
-        borderColor: colors.blue,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true,
-            steps: 10,
-            stepValue: 5,
-            max: 100
-          }
-        }]
-      }
-    }
-  }
-  const statusChart = new Chart(ctx, options)
+  statusChart = new Chart(ctx, options)
+}
+
+function updateChart (temp, humidity, dates) {
+  options.data.labels = dates
+  options.data.datasets[0].data = temp
+  options.data.datasets[1].data = humidity
+  statusChart.update(0)
 }
 
 startApp()

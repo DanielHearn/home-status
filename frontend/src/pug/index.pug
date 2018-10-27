@@ -4,6 +4,7 @@ html(lang='en')
     meta(charset='UTF-8')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     title Home Status
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800')
     link(rel='stylesheet', href='css/main.css')
   body
     #main
@@ -26,10 +27,11 @@ html(lang='en')
                 span.value
           div.grid-item
             div.grid-content
-              p.content-title Home Status
-              button#day1-button 1 Day
-              button#day2-button 2 Days
-              button#day7-button 7 Days
+              p.content-title Status Trends
+              div.button-container
+                button#day1-button.active 1 Day
+                button#day2-button 2 Days
+                button#day7-button 7 Days
               div.chart-container
     script(src='js/polyfill.js')
     script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js')

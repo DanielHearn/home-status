@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700,800");
-* {
-  box-sizing: border-box; }
+@media screen and (max-width: 60em) {
+  html body #grid {
+    grid-template-columns: 100%; } }
 
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   background: #efefef;
   display: flex;
   margin: 0;
@@ -16,13 +16,13 @@ body {
 
 h1 {
   font-size: 1.6em;
-  font-weight: 600;
+  font-weight: 700;
   color: #222;
   margin: 0.25em 0; }
 
 p {
   font-size: 1em;
-  font-weight: 400;
+  font-weight: 500;
   color: #222; }
 
 #main {
@@ -34,10 +34,20 @@ p {
   padding: 1em; }
 
 .header {
+  border-radius: 0.25em;
   display: flex;
   padding: 1em;
   background: #fefefe;
   margin-bottom: 1em; }
+
+.chart-container {
+  display: flex;
+  flex-direction: column; }
+
+.content-title {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin: 0.25em 0 0.75em 0; }
 
 .grid-container {
   display: flex;
@@ -52,6 +62,7 @@ p {
   grid-template-columns: 1fr minmax(10em, 75%);
   grid-template-rows: 1fr; }
   #grid .grid-item {
+    border-radius: 0.25em;
     display: flex;
     flex-direction: column;
     background: #fefefe; }
@@ -61,15 +72,27 @@ p {
       flex-direction: column;
       padding: 1em; }
 
-.chart-container {
-  display: flex;
-  flex-direction: column; }
+input, button {
+  font-family: 'Montserrat', sans-serif; }
 
-.content-title {
-  font-size: 1.5em;
+button {
+  border-radius: 0.25em;
+  padding: 0.75em 1.25em;
+  color: #fefefe;
+  background: #444;
+  transition: background 0.25s ease-in-out;
+  border: none;
+  cursor: pointer;
   font-weight: 500;
-  margin: 0.25em 0; }
+  text-transform: uppercase;
+  user-select: none; }
+  button:hover {
+    background: #222; }
+  button.active {
+    background: #1dd1a1; }
 
-@media screen and (max-width: 60em) {
-  html body #grid {
-    grid-template-columns: 100%; } }
+.button-container button {
+  margin-right: 0.5em; }
+
+* {
+  box-sizing: border-box; }
