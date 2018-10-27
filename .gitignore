@@ -2,3 +2,4 @@
 datacapture/secret.py
 node_modules
 frontend/dist
+frontend/node_modules
