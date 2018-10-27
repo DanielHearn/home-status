@@ -57,7 +57,7 @@ var options = {
 
 var statusQuantity = timePeriods.days_7;
 var statusChart = void 0;
-var status = void 0;
+var statusArray = void 0;
 var currentPeriod = timePeriods.days_1;
 
 day1Button.addEventListener('click', get1DayStatus);
@@ -117,9 +117,9 @@ function getStatus() {
     return fetch(apiUrl).then(function (response) {
       return response.json();
     }).then(function (json) {
-      console.log(json);
+      console.log('Retrieved', json);
       if (json.status === 'success') {
-        resolve(json);
+        resolve(json.statuses);
       } else {
         reject(false);
       }
@@ -131,10 +131,10 @@ function getStatus() {
 }
 
 function handleStatus() {
-  getStatus().then(function (json) {
-    if (json) {
-      status = json;
-      showStatus(json);
+  getStatus().then(function (statuses) {
+    if (statuses) {
+      statusArray = statuses;
+      showStatus();
     }
   });
 }
@@ -146,14 +146,16 @@ function showStatus() {
 }
 
 function showLatestStatus() {
-  var latestStatus = status.statuses[0];
-  var temp = latestStatus.temp_value;
-  var humidity = latestStatus.humidity_value;
-  var date = moment.parseZone(latestStatus.date_inserted);
+  if (statusArray) {
+    var latestStatus = statusArray[0];
+    var temp = latestStatus.temp_value;
+    var humidity = latestStatus.humidity_value;
+    var date = moment.parseZone(latestStatus.date_inserted);
 
-  tempValueElement.textContent = temp;
-  humidityValueElement.textContent = humidity;
-  dateElement.textContent = date.format('LLL');
+    tempValueElement.textContent = temp;
+    humidityValueElement.textContent = humidity;
+    dateElement.textContent = date.format('LLL');
+  }
 }
 
 function startApp() {
@@ -170,7 +172,7 @@ function reduceArray(array, increment) {
 
 function getChartData(length) {
   // Get n number of statuses
-  var statusList = status.statuses.slice(0, length).reverse();
+  var statusList = statusArray.slice(0, length).reverse();
 
   var mappedTemps = mapTemps(statusList);
   var mappedHumidity = mapHumidities(statusList);
