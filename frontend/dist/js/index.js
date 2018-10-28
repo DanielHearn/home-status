@@ -1,46 +1,93 @@
 'use strict';
 
-var handleStatus = function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var json;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return getStatus();
-
-          case 2:
-            json = _context.sent;
-
-            if (json) {
-              showStatus(json);
-            }
-
-          case 4:
-          case 'end':
-            return _context.stop();
-        }
-      }
-    }, _callee, this);
-  }));
-
-  return function handleStatus() {
-    return _ref.apply(this, arguments);
-  };
-}();
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 var tempValueElement = document.querySelector('#latest-temp .value');
 var humidityValueElement = document.querySelector('#latest-humidity .value');
 var dateElement = document.querySelector('#latest-date .value');
+var chartContainer = document.querySelector('.chart-container');
+
+var day1Button = document.querySelector('#day1-button');
+var day2Button = document.querySelector('#day2-button');
+var day7Button = document.querySelector('#day7-button');
+
 var apiUrlRoot = 'http://www.thekoreanhandbook.com/homestatus';
 
-var red = '#ff7491';
-var blue = '#37a2eb';
+var colors = {
+  red: '#ff7491',
+  lightRed: 'rgba(255,116,145,0.5)',
+  blue: '#37a2eb',
+  lightBlue: 'rgba(55,162,235, 0.5)'
+};
 
-var statusQuantity = 10;
+var timePeriods = {
+  days_1: 48,
+  days_2: 96,
+  days_7: 336
+};
+
+var options = {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Temp c',
+      backgroundColor: colors.lightRed,
+      borderColor: colors.red,
+      borderWidth: 1
+    }, {
+      label: 'Humidity %',
+      backgroundColor: colors.lightBlue,
+      borderColor: colors.blue,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+          // steps: 10,
+          // stepValue: 5,
+          max: 100
+        }
+      }]
+    }
+  }
+};
+
+var statusQuantity = timePeriods.days_7;
+var statusChart = void 0;
+var statusArray = void 0;
+var currentPeriod = timePeriods.days_1;
+
+day1Button.addEventListener('click', get1DayStatus);
+day2Button.addEventListener('click', get2DayStatus);
+day7Button.addEventListener('click', get7DayStatus);
+
+function showChartButtonActive(activeButton) {
+  day1Button.classList.remove('active');
+  day2Button.classList.remove('active');
+  day7Button.classList.remove('active');
+  activeButton.classList.add('active');
+}
+
+function get1DayStatus() {
+  currentPeriod = timePeriods.days_1;
+  showChartButtonActive(day1Button);
+  getChartData(currentPeriod);
+}
+
+function get2DayStatus() {
+  currentPeriod = timePeriods.days_2;
+  showChartButtonActive(day2Button);
+  getChartData(currentPeriod);
+}
+
+function get7DayStatus() {
+  currentPeriod = timePeriods.days_7;
+  showChartButtonActive(day7Button);
+  getChartData(currentPeriod);
+}
 
 function mapTemps(statuses) {
   return statuses.map(function (status) {
@@ -65,82 +112,101 @@ function showError(str) {
 }
 
 function getStatus() {
-  var apiUrl = apiUrlRoot + '?status_quantity=' + statusQuantity;
-  return fetch(apiUrl).then(function (response) {
-    return response.json();
-  }).then(function (json) {
-    console.log(json);
-    if (json.status === 'success') {
-      return json;
-    } else {
-      return false;
-    }
-  }).catch(function (error) {
-    showError('Fetch error: ' + error);
-    return false;
+  return new Promise(function (resolve, reject) {
+    var apiUrl = apiUrlRoot + '?status_quantity=' + statusQuantity;
+    return fetch(apiUrl).then(function (response) {
+      return response.json();
+    }).then(function (json) {
+      console.log('Retrieved', json);
+      if (json.status === 'success') {
+        resolve(json.statuses);
+      } else {
+        reject(false);
+      }
+    }).catch(function (error) {
+      showError('Fetch error: ' + error);
+      reject(error);
+    });
   });
 }
 
-function showStatus(json) {
-  showLatestStatus(json.statuses[0]);
-
-  var statusList = json.statuses.reverse();
-  var mappedTemps = mapTemps(statusList);
-  var mappedHumidity = mapHumidities(statusList);
-  var mappedDates = mapDates(statusList);
-
-  showChart(mappedTemps, mappedHumidity, mappedDates);
+function handleStatus() {
+  getStatus().then(function (statuses) {
+    if (statuses) {
+      statusArray = statuses;
+      showStatus();
+    }
+  });
 }
 
-function showLatestStatus(latestStatus) {
-  var temp = latestStatus.temp_value;
-  var humidity = latestStatus.humidity_value;
-  var date = moment.parseZone(latestStatus.date_inserted);
+function showStatus() {
+  showLatestStatus();
+  createChart();
+  getChartData(currentPeriod);
+}
 
-  tempValueElement.textContent = temp;
-  humidityValueElement.textContent = humidity;
-  dateElement.textContent = date.format('LLL');
+function showLatestStatus() {
+  if (statusArray) {
+    var latestStatus = statusArray[0];
+    var temp = latestStatus.temp_value;
+    var humidity = latestStatus.humidity_value;
+    var date = moment.parseZone(latestStatus.date_inserted);
+
+    tempValueElement.textContent = temp;
+    humidityValueElement.textContent = humidity;
+    dateElement.textContent = date.format('LLL');
+  }
 }
 
 function startApp() {
   handleStatus();
 }
 
-function showChart(temp, humidity, dates) {
-  var ctx = document.getElementById('statusChart').getContext('2d');
-  var statusChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: dates,
-      datasets: [{
-        label: 'Temp c',
-        data: temp,
-        backgroundColor: red,
-        borderColor: red,
-        borderWidth: 1
-      }, {
-        label: 'Humidity %',
-        data: humidity,
-        backgroundColor: blue,
-        borderColor: blue,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true,
-            steps: 10,
-            stepValue: 5,
-            max: 100
-          }
-        }]
-      }
-    }
-  });
+function reduceArray(array, increment) {
+  var newArray = [];
+  for (var i = 0; i < array.length; i += increment) {
+    newArray = newArray.concat(array[i]);
+  }
+  return newArray;
+}
+
+function getChartData(length) {
+  // Get n number of statuses
+  var statusList = statusArray.slice(0, length).reverse();
+
+  var mappedTemps = mapTemps(statusList);
+  var mappedHumidity = mapHumidities(statusList);
+  var mappedDates = mapDates(statusList);
+
+  // Skip n amount of items in array to reduce chart clutter
+  if (currentPeriod === timePeriods.days_2) {
+    mappedTemps = reduceArray(mappedTemps, 2);
+    mappedHumidity = reduceArray(mappedHumidity, 2);
+    mappedDates = reduceArray(mappedDates, 2);
+  } else if (currentPeriod === timePeriods.days_7) {
+    mappedTemps = reduceArray(mappedTemps, 6);
+    mappedHumidity = reduceArray(mappedHumidity, 6);
+    mappedDates = reduceArray(mappedDates, 6);
+  }
+
+  updateChart(mappedTemps, mappedHumidity, mappedDates);
+}
+
+function createChart() {
+  var canvas = document.createElement('canvas');
+  canvas.width = 400;
+  canvas.height = 400;
+  canvas.id = 'statusChart';
+  chartContainer.appendChild(canvas);
+  var ctx = document.querySelector('#statusChart').getContext('2d');
+  statusChart = new Chart(ctx, options);
+}
+
+function updateChart(temp, humidity, dates) {
+  options.data.labels = dates;
+  options.data.datasets[0].data = temp;
+  options.data.datasets[1].data = humidity;
+  statusChart.update(0);
 }
 
 startApp();
