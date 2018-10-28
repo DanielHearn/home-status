@@ -25,6 +25,10 @@ html(lang='en')
                 span %
               p#latest-date
                 span.value
+              p#update-timer
+                span Next update in 
+                span.value 0
+                span  min
           div.grid-item
             div.grid-content
               p.content-title Status Trends
@@ -33,7 +37,7 @@ html(lang='en')
                 button#day2-button 2 Days
                 button#day7-button 7 Days
               div.chart-container
-    script(src='js/polyfill.js')
+    script(type='text/javascript', src='js/polyfill.js')
     script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js')
-    script(src='js/moment.js')
-    script(src='js/index.js')
+    script(type='text/javascript', src='js/moment.js')
+    script(type='text/javascript', src='js/index.js')
