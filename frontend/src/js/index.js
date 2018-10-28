@@ -45,8 +45,8 @@ const options = {
       yAxes: [{
         ticks: {
           beginAtZero: true,
-          // steps: 10,
-          // stepValue: 5,
+          steps: 10,
+          stepValue: 5,
           max: 100
         }
       }]
@@ -197,11 +197,13 @@ function setUpdateTimerInterval () {
   setInterval(function () {
     const timeUntilNextUpdate = timeUntilHalfHour()
     console.log('Minutes till update timer:', timeUntilNextUpdate)
-    showUpdateTimer(timeUntilNextUpdate)
     if (timeUntilNextUpdate === 30) {
       setTimeout(function () {
+        showUpdateTimer(timeUntilNextUpdate)
         updateStatus(timeUntilNextUpdate)
-      }, 1000)
+      }, 5000)
+    } else {
+      showUpdateTimer(timeUntilNextUpdate)
     }
   }, 60000)
 }
