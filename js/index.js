@@ -4,6 +4,7 @@ var tempValueElement = document.querySelector('#latest-temp .value');
 var humidityValueElement = document.querySelector('#latest-humidity .value');
 var dateElement = document.querySelector('#latest-date .value');
 var chartContainer = document.querySelector('.chart-container');
+var updateTimerElement = document.querySelector('#update-timer .value');
 
 var day1Button = document.querySelector('#day1-button');
 var day2Button = document.querySelector('#day2-button');
@@ -139,6 +140,18 @@ function handleStatus() {
   });
 }
 
+function updateStatus() {
+  console.log('Update status');
+  getStatus().then(function (statuses) {
+    if (statuses) {
+      statusArray = statuses;
+      console.log('Got updated', statusArray);
+      showLatestStatus();
+      getChartData(currentPeriod);
+    }
+  });
+}
+
 function showStatus() {
   showLatestStatus();
   createChart();
@@ -160,6 +173,46 @@ function showLatestStatus() {
 
 function startApp() {
   handleStatus();
+  startUpdateTimer();
+}
+
+function timeUntilNextMinute() {
+  return (60 - new Date().getSeconds() % 60) * 1000;
+}
+
+function timeUntilHalfHour() {
+  return (30 * 60 - new Date().getMinutes() % 30 * 60) / 60;
+}
+
+function startUpdateTimer() {
+  // Show initial timer
+  showUpdateTimer(timeUntilHalfHour());
+
+  console.log('Seconds till update timer interval:', timeUntilNextMinute() / 1000);
+  // Wait till next minute before setting update interval
+  setTimeout(function () {
+    showUpdateTimer(timeUntilHalfHour());
+    setUpdateTimerInterval();
+  }, timeUntilNextMinute());
+}
+
+function setUpdateTimerInterval() {
+  console.log('Set interval');
+  // Update next update timer every minute
+  setInterval(function () {
+    var timeUntilNextUpdate = timeUntilHalfHour();
+    console.log('Minutes till update timer:', timeUntilNextUpdate);
+    showUpdateTimer(timeUntilNextUpdate);
+    if (timeUntilNextUpdate === 30) {
+      setTimeout(function () {
+        updateStatus(timeUntilNextUpdate);
+      }, 1000);
+    }
+  }, 60000);
+}
+
+function showUpdateTimer(timeUntilNextUpdate) {
+  updateTimerElement.textContent = timeUntilNextUpdate;
 }
 
 function reduceArray(array, increment) {
