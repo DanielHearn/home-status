@@ -2,7 +2,7 @@
 datacapture/secret.py
 node_modules
 frontend/dist/
-frontend/node_modules/
+frontend/node_modules
 frontend/dist/js/index.js
 frontend/dist/index.html
 frontend/dist/css/main.css
