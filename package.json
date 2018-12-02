@@ -31,7 +31,13 @@
     "gulp-uglify": "^3.0.1",
     "gulp-uncss": "^1.0.6",
     "gulp-useref": "^3.1.6",
-    "run-sequence": "^2.2.1"
+    "run-sequence": "^2.2.1",
+    "minimatch": ">=3.0.2",
+    "randomatic": ">=3.0.0",
+    "cryptiles": ">=4.1.2",
+    "sshpk": ">=1.13.2",
+    "debug": ">=2.6.9",
+    "lodash": ">=4.17.5"
   },
   "dependencies": {
     "base64url": "^2.0.0",
