@@ -1,5 +1,7 @@
+#NO LONGER ACTIVE
+
 # home-status
-Frontend and data scraping for my home status checker on www.danielhearn.co.uk/home-status
+Frontend and data scraping for my home status checker.
 
 ## Frontend
 
