@@ -1,4 +1,4 @@
-#NO LONGER ACTIVE
+# NO LONGER ACTIVE
 
 # home-status
 Frontend and data scraping for my home status checker.
